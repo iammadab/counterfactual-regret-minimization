@@ -7,10 +7,8 @@ const SCISSORS: usize = 2;
 
 fn main() {
     let mut instance = RPS_CFR::new();
-    let strategy = instance.getStrategy();
-    let action = RPS_CFR::getAction(&strategy);
-    println!("{:?}", action);
-    instance.train(10);
+    instance.train(5000000);
+    println!("Average strategy: {:?}", instance.getAverageStrategy());
 }
 
 struct RPS_CFR {
@@ -56,6 +54,24 @@ impl RPS_CFR {
         self.strategy.clone()
     }
 
+    pub fn getAverageStrategy(&mut self) -> Vec<f64> {
+        let mut normalizingSum = 0.0;
+        let mut averageStrategy = vec![0.0, 0.0, 0.0];
+
+        for i in 0..NUM_OF_ACTIONS {
+            normalizingSum += self.strategySum[i];
+        }
+
+        for i in 0..NUM_OF_ACTIONS {
+            if normalizingSum > 0.0 {
+                averageStrategy[i] = self.strategySum[i] / normalizingSum;
+            } else {
+                averageStrategy[i] = 1.0 / NUM_OF_ACTIONS as f64;
+            }
+        }
+        averageStrategy
+    }
+
     pub fn getAction(strategy: &Vec<f64>) -> usize {
         let r: f64 = rand::thread_rng().gen();
         let mut action: usize = 0;
@@ -80,21 +96,18 @@ impl RPS_CFR {
             let myAction = RPS_CFR::getAction(&strategy);
             let otherAction = RPS_CFR::getAction(&oppStrategy);
 
-            // What is this doing?
             // Keeping constant the action of the other player
-            // Calculate what our utility would have been for all other actions
+            // Calculate what our utility would have been for all possible actions
+            // This is what we shall use to compute our regret
             for i in 0..NUM_OF_ACTIONS {
                 actionUtilities[i] = RPS_CFR::value(i, otherAction);
             }
 
-            println!("{:?}", actionUtilities);
-
-            println!("Start");
-            println!("{}", myAction);
-            println!("{}", otherAction);
-            println!("End");
-            // Compute action utilities
             // Accumulate action regrets
+            for i in 0..NUM_OF_ACTIONS {
+                // Regret is the utility you could have gotten minus utility you actually got
+                self.regretSum[i] += actionUtilities[i] - actionUtilities[myAction];
+            }
         }
     }
 
