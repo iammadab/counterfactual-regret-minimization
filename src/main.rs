@@ -1,8 +1,12 @@
+use rand::Rng;
+
 const NUM_OF_ACTIONS: usize = 3;
 
 fn main(){
     let mut instance = RPS_CFR::new();
-    println!("{:?}", instance.getStrategy());
+    let strategy = instance.getStrategy();
+    let action = instance.getAction(strategy);
+    println!("{:?}", action);
 }
 
 struct RPS_CFR {
@@ -46,5 +50,19 @@ impl RPS_CFR {
             self.strategySum[i] += self.strategy[i];
         }
         self.strategy.clone()
+    }
+
+    pub fn getAction(&mut self, strategy: Vec<f64>) -> usize {
+        let r: f64 = rand::thread_rng().gen();
+        let mut action: usize = 0;
+        let mut cummulativeProbability = 0.0;
+        while action < NUM_OF_ACTIONS - 1 {
+            cummulativeProbability += strategy[action];
+            if r < cummulativeProbability {
+                break;
+            }
+            action += 1;
+        }
+        action
     }
 }
