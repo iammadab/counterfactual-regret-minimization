@@ -83,19 +83,8 @@ impl RPS_CFR {
             // What is this doing?
             // Keeping constant the action of the other player
             // Calculate what our utility would have been for all other actions
-            //
-            actionUtilities[otherAction] = 0.0;
-
-            if otherAction == NUM_OF_ACTIONS - 1 {
-                actionUtilities[0] = 1.0;
-            } else {
-                actionUtilities[otherAction + 1] = 1.0;
-            }
-
-            if otherAction == 0 {
-                actionUtilities[NUM_OF_ACTIONS - 1] = -1.0;
-            } else {
-                actionUtilities[otherAction - 1] = -1.0;
+            for i in 0..NUM_OF_ACTIONS {
+                actionUtilities[i] = RPS_CFR::value(i, otherAction);
             }
 
             println!("{:?}", actionUtilities);
