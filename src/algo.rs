@@ -21,7 +21,7 @@ impl CFR {
         let mut normalizingSum = 0.0;
         // Set the strategy to be equal to the regret sum
         // If the regret is negative make it zero
-        // Then keep track of the sum of all the strategies
+        // Then keep track of the sum of all the strateg-ies
         // So that we can normalize the strategy later on
         for i in 0..self.noOfActions {
             if self.regretSum[i] > 0.0 {
@@ -47,7 +47,7 @@ impl CFR {
 
     pub fn getAverageStrategy(&mut self) -> Vec<f64> {
         let mut normalizingSum = 0.0;
-        let mut averageStrategy = vec![0.0, 0.0, 0.0];
+        let mut averageStrategy = vec![0.0; self.noOfActions];
 
         for i in 0..self.noOfActions {
             normalizingSum += self.strategySum[i];
@@ -82,6 +82,8 @@ impl CFR {
     }
 
     pub fn train(&mut self, my_action: usize, action_utilities: Vec<f64>) {
+        // Take feedback from the environment (action_utilities)
+        // use this feedback to update the regret values
         for i in 0..self.noOfActions {
             self.regretSum[i] += action_utilities[i] - action_utilities[my_action];
         }
