@@ -1,6 +1,8 @@
 pub struct RPS {}
 
 impl RPS {
+    pub const NO_OF_ACTIONS: usize = 3;
+
     fn value(action1: usize, action2: usize) -> f64 {
         if action1 == action2 {
             return 0.0;

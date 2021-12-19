@@ -1,10 +1,10 @@
 use rand::Rng;
 
 pub struct CFR {
-    pub regretSum: Vec<f64>,
-    pub strategy: Vec<f64>,
-    pub strategySum: Vec<f64>,
-    pub noOfActions: usize,
+    regretSum: Vec<f64>,
+    strategy: Vec<f64>,
+    strategySum: Vec<f64>,
+    noOfActions: usize,
 }
 
 impl CFR {

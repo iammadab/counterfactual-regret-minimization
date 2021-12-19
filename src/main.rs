@@ -2,8 +2,8 @@ mod algo;
 mod rps;
 
 fn main() {
-    let mut player1 = algo::CFR::new(3);
-    let mut player2 = algo::CFR::new(3);
+    let mut player1 = algo::CFR::new(rps::RPS::NO_OF_ACTIONS);
+    let mut player2 = algo::CFR::new(rps::RPS::NO_OF_ACTIONS);
 
     const ITERATIONS: usize = 1000000;
 
