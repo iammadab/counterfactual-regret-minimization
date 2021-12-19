@@ -6,9 +6,24 @@ const PAPER: usize = 1;
 const SCISSORS: usize = 2;
 
 fn main() {
-    let mut instance = RPS_CFR::new();
-    instance.train(5000000);
-    println!("Average strategy: {:?}", instance.getAverageStrategy());
+    let mut player1 = RPS_CFR::new();
+    let mut player2 = RPS_CFR::new();
+
+    const ITERATIONS: usize = 1000000;
+
+    println!("Training..");
+
+    for i in 0..ITERATIONS {
+        let player1_move = player1.getMove();
+        let player2_move = player2.getMove();
+
+        player1.train(player1_move, player2_move);
+        player2.train(player2_move, player1_move);
+    }
+
+    println!();
+    println!("Player 1 strategy: {:?}", player1.getAverageStrategy());
+    println!("Player 2 strategy: {:?}", player2.getAverageStrategy());
 }
 
 struct RPS_CFR {
@@ -26,7 +41,7 @@ impl RPS_CFR {
         }
     }
 
-    pub fn getStrategy(&mut self) -> Vec<f64> {
+    fn getStrategy(&mut self) -> Vec<f64> {
         let mut normalizingSum = 0.0;
         // Set the strategy to be equal to the regret sum
         // If the regret is negative make it zero
@@ -72,7 +87,7 @@ impl RPS_CFR {
         averageStrategy
     }
 
-    pub fn getAction(strategy: &Vec<f64>) -> usize {
+    fn getAction(strategy: &Vec<f64>) -> usize {
         let r: f64 = rand::thread_rng().gen();
         let mut action: usize = 0;
         let mut cummulativeProbability = 0.0;
@@ -86,28 +101,17 @@ impl RPS_CFR {
         action
     }
 
-    pub fn train(&mut self, iterations: usize) {
-        let oppStrategy: Vec<f64> = vec![0.4, 0.3, 0.3];
-        let mut actionUtilities: Vec<f64> = vec![0.0, 0.0, 0.0];
+    pub fn getMove(&mut self) -> usize {
+        RPS_CFR::getAction(&self.getStrategy())
+    }
 
-        for i in 0..iterations {
-            // Get regret matched mixed strategy actions
-            let strategy = self.getStrategy();
-            let myAction = RPS_CFR::getAction(&strategy);
-            let otherAction = RPS_CFR::getAction(&oppStrategy);
-
-            // Keeping constant the action of the other player
-            // Calculate what our utility would have been for all possible actions
-            // This is what we shall use to compute our regret
-            for i in 0..NUM_OF_ACTIONS {
-                actionUtilities[i] = RPS_CFR::value(i, otherAction);
-            }
-
-            // Accumulate action regrets
-            for i in 0..NUM_OF_ACTIONS {
-                // Regret is the utility you could have gotten minus utility you actually got
-                self.regretSum[i] += actionUtilities[i] - actionUtilities[myAction];
-            }
+    pub fn train(&mut self, my_action: usize, opponent_action: usize) {
+        let mut action_utilities: Vec<f64> = vec![0.0, 0.0, 0.0];
+        for i in 0..NUM_OF_ACTIONS {
+            action_utilities[i] = RPS_CFR::value(i, opponent_action);
+        }
+        for i in 0..NUM_OF_ACTIONS {
+            self.regretSum[i] += action_utilities[i] - action_utilities[my_action];
         }
     }
 

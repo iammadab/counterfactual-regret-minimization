@@ -1,0 +1,18 @@
+Every finite game has a mixed strategy nash equilibrium.
+A finite game is a game that has a finite number of options, finite number of players and the game cannot go on indefinitely.
+The goal of most computer play programs is to find or approximate this nash equilibrium. 
+
+A pure strategy is one in which in a player chooses a action with probability 1.
+A mixed strategy is one in which in the player with different probabilities and samples from this distribution.
+
+Best response strategy is the strategy that maximizes the expected utility for a player given the strategies of the other players.
+
+A nash equilibrium is a point reached when every player is playing their best response to each other. At this point none of the players have extra incentive to change their strategy as they are already doing the best they can keeping the opponent strategies constant.
+
+
+Regret
+The regret of not having chosen an action is the difference between the utility of the action you did not choose and the utility of the action you chose. 
+Keeping a list of regrets, and choosing the actions that you have regreted not playing the most more times.
+
+Keep track of regrets for each action, then use the regrets to come up with a mixed strategy.
+
