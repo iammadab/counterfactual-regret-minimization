@@ -1,9 +1,20 @@
+pub trait Game {
+    type Action;
+    fn no_of_actions(&self) -> usize;
+    fn value(&self, action_1: Self::Action, action_2: Self::Action) -> f64;
+    fn action_utilities(&self, opponent_action: usize) -> Vec<f64>;
+}
+
 pub struct RPS {}
 
-impl RPS {
-    pub const NO_OF_ACTIONS: usize = 3;
+impl Game for RPS {
+    type Action = usize;
 
-    fn value(action1: usize, action2: usize) -> f64 {
+    fn no_of_actions(&self) -> usize {
+        3
+    }
+
+    fn value(&self, action1: Self::Action, action2: Self::Action) -> f64 {
         if action1 == action2 {
             return 0.0;
         }
@@ -13,10 +24,10 @@ impl RPS {
         return 1.0;
     }
 
-    pub fn action_utilities(opponent_action: usize) -> Vec<f64> {
+    fn action_utilities(&self, opponent_action: usize) -> Vec<f64> {
         let mut action_utilities = vec![0.0; 3];
         for i in 0..3 {
-            action_utilities[i] = RPS::value(i, opponent_action);
+            action_utilities[i] = self.value(i, opponent_action);
         }
         action_utilities
     }
@@ -27,19 +38,21 @@ fn test_value_function() {
     const ROCK: usize = 0;
     const PAPER: usize = 1;
     const SCISSORS: usize = 2;
+    
+    let rps_environment = RPS{};
 
     // Exhaust Rock
-    assert_eq!(RPS::value(ROCK, PAPER), -1.0);
-    assert_eq!(RPS::value(ROCK, SCISSORS), 1.0);
-    assert_eq!(RPS::value(ROCK, ROCK), 0.0);
+    assert_eq!(rps_environment.value(ROCK, PAPER), -1.0);
+    assert_eq!(rps_environment.value(ROCK, SCISSORS), 1.0);
+    assert_eq!(rps_environment.value(ROCK, ROCK), 0.0);
 
     // Exhaust Paper
-    assert_eq!(RPS::value(PAPER, PAPER), 0.0);
-    assert_eq!(RPS::value(PAPER, SCISSORS), -1.0);
-    assert_eq!(RPS::value(PAPER, ROCK), 1.0);
+    assert_eq!(rps_environment.value(PAPER, PAPER), 0.0);
+    assert_eq!(rps_environment.value(PAPER, SCISSORS), -1.0);
+    assert_eq!(rps_enviroment.value(PAPER, ROCK), 1.0);
 
     // Exhaust Scissors
-    assert_eq!(RPS::value(SCISSORS, PAPER), 1.0);
-    assert_eq!(RPS::value(SCISSORS, SCISSORS), 0.0);
-    assert_eq!(RPS::value(SCISSORS, ROCK), -1.0);
+    assert_eq!(rps_enviroment.value(SCISSORS, PAPER), 1.0);
+    assert_eq!(rps_enviroment.value(SCISSORS, SCISSORS), 0.0);
+    assert_eq!(rps_enviroment.value(SCISSORS, ROCK), -1.0);
 }

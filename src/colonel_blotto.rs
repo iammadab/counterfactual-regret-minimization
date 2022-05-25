@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use crate::Game;
 
 pub struct ColonelBlotto {
     pub actions: HashMap<usize, Vec<usize>>,
@@ -23,12 +24,16 @@ impl ColonelBlotto {
 
         ColonelBlotto { actions }
     }
+}
 
-    pub fn no_of_actions(&self) -> usize {
+impl Game for ColonelBlotto {
+    type Action = Vec<usize>;
+
+    fn no_of_actions(&self) -> usize {
         self.actions.len()
     }
 
-    fn value(action1: &Vec<usize>, action2: &Vec<usize>) -> f64 {
+    fn value(&self, action1: Self::Action, action2: Self::Action) -> f64 {
         let (mut score1, mut score2) = (0, 0);
         for i in 0..action1.len() {
             if action1[i] > action2[i] {
@@ -45,19 +50,22 @@ impl ColonelBlotto {
         return 0.0;
     }
 
-    pub fn action_utilities(&self, opponent_action: usize) -> Vec<f64> {
+    fn action_utilities(&self, opponent_action: usize) -> Vec<f64> {
         let mut action_utilities = vec![0.0; self.no_of_actions()];
         for i in 0..self.no_of_actions() {
             action_utilities[i] =
-                ColonelBlotto::value(&self.actions[&i], &self.actions[&opponent_action]);
+                self.value(self.actions[&i].clone(), self.actions[&opponent_action].clone());
         }
         action_utilities
     }
 }
 
+
+
 #[test]
 fn test_value_function() {
-    assert_eq!(ColonelBlotto::value(&vec![5, 2, 3], &vec![6, 5, 2]), -1.0);
-    assert_eq!(ColonelBlotto::value(&vec![5, 2, 3], &vec![5, 2, 3]), 0.0);
-    assert_eq!(ColonelBlotto::value(&vec![1, 5, 2], &vec![1, 5, 1]), 1.0);
+    let colonel_blotto_environment = ColonelBlotto::new();
+    assert_eq!(colonel_blotto_environment.value(vec![5, 2, 3], vec![6, 5, 2]), -1.0);
+    assert_eq!(colonel_blotto_environment.value(vec![5, 2, 3], vec![5, 2, 3]), 0.0);
+    assert_eq!(colonel_blotto_environment.value(vec![1, 5, 2], vec![1, 5, 1]), 1.0);
 }
