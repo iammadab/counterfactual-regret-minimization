@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::Game;
+use std::collections::HashMap;
 
 pub struct ColonelBlotto {
     pub actions: HashMap<usize, Vec<usize>>,
@@ -53,19 +53,28 @@ impl Game for ColonelBlotto {
     fn action_utilities(&self, opponent_action: usize) -> Vec<f64> {
         let mut action_utilities = vec![0.0; self.no_of_actions()];
         for i in 0..self.no_of_actions() {
-            action_utilities[i] =
-                self.value(self.actions[&i].clone(), self.actions[&opponent_action].clone());
+            action_utilities[i] = self.value(
+                self.actions[&i].clone(),
+                self.actions[&opponent_action].clone(),
+            );
         }
         action_utilities
     }
 }
 
-
-
 #[test]
 fn test_value_function() {
     let colonel_blotto_environment = ColonelBlotto::new();
-    assert_eq!(colonel_blotto_environment.value(vec![5, 2, 3], vec![6, 5, 2]), -1.0);
-    assert_eq!(colonel_blotto_environment.value(vec![5, 2, 3], vec![5, 2, 3]), 0.0);
-    assert_eq!(colonel_blotto_environment.value(vec![1, 5, 2], vec![1, 5, 1]), 1.0);
+    assert_eq!(
+        colonel_blotto_environment.value(vec![5, 2, 3], vec![6, 5, 2]),
+        -1.0
+    );
+    assert_eq!(
+        colonel_blotto_environment.value(vec![5, 2, 3], vec![5, 2, 3]),
+        0.0
+    );
+    assert_eq!(
+        colonel_blotto_environment.value(vec![1, 5, 2], vec![1, 5, 1]),
+        1.0
+    );
 }

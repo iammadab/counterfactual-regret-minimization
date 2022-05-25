@@ -38,8 +38,8 @@ fn test_value_function() {
     const ROCK: usize = 0;
     const PAPER: usize = 1;
     const SCISSORS: usize = 2;
-    
-    let rps_environment = RPS{};
+
+    let rps_environment = RPS {};
 
     // Exhaust Rock
     assert_eq!(rps_environment.value(ROCK, PAPER), -1.0);

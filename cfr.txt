@@ -16,3 +16,11 @@ Keeping a list of regrets, and choosing the actions that you have regreted not p
 
 Keep track of regrets for each action, then use the regrets to come up with a mixed strategy.
 
+
+Convergence test
+- currently I run the simulation for a fixed number of iteration steps
+- different games would require different number of iterations to converge
+- another approach would be to run the simulation until convergence is reached
+the nash equilibrium strategy can be defined as N = [n1, n2, n3]
+cfr approximates this by getting Na = [na1, na2, na3]
+for convergence N - Na should approach 0 as a approaches infinity
