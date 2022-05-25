@@ -10,24 +10,22 @@ impl ColonelBlotto {
         let troop_size: usize = 5;
         let mut curr_index: usize = 0;
 
-        for i in 0..=troop_size{
-           for j in 0..=troop_size {
-               for k in 0..=troop_size {
-                   if i + j + k < troop_size {
-                       actions.insert(curr_index, vec![i, j, k]);
-                       curr_index += 1;
-                   }
-               }
-           }
+        for i in 0..=troop_size {
+            for j in 0..=troop_size {
+                for k in 0..=troop_size {
+                    if i + j + k < troop_size {
+                        actions.insert(curr_index, vec![i, j, k]);
+                        curr_index += 1;
+                    }
+                }
+            }
         }
 
-        ColonelBlotto {
-            actions
-        }
+        ColonelBlotto { actions }
     }
 
     pub fn no_of_actions(&self) -> usize {
-       self.actions.len()
+        self.actions.len()
     }
 
     fn value(action1: &Vec<usize>, action2: &Vec<usize>) -> f64 {
@@ -50,7 +48,8 @@ impl ColonelBlotto {
     pub fn action_utilities(&self, opponent_action: usize) -> Vec<f64> {
         let mut action_utilities = vec![0.0; self.no_of_actions()];
         for i in 0..self.no_of_actions() {
-            action_utilities[i] = ColonelBlotto::value(&self.actions[&i], &self.actions[&opponent_action]);
+            action_utilities[i] =
+                ColonelBlotto::value(&self.actions[&i], &self.actions[&opponent_action]);
         }
         action_utilities
     }
